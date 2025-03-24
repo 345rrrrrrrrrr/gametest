@@ -21,7 +21,8 @@ export async function loadTexture(path: string): Promise<THREE.Texture> {
         // Configure texture
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(1, 1);
-        texture.encoding = THREE.sRGBEncoding;
+        // Using colorSpace instead of the deprecated encoding property
+        texture.colorSpace = THREE.SRGBColorSpace;
         resolve(texture);
       },
       undefined,
@@ -120,10 +121,19 @@ export function debounce<T extends (...args: any[]) => any>(
 
 // Generate a random color with optional alpha
 export function randomColor(alpha: number = 1): string {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  if (alpha < 1) {
+    // Return rgba format for transparency
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  } else {
+    // Return hex format for opaque colors (fixing the hex format warnings)
+    const r = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+    const g = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+    const b = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+    return `#${r}${g}${b}`;
+  }
 }
 
 // Format a number with commas
@@ -173,19 +183,59 @@ export function easeOut(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-// Convert a hex color to an RGB color
+// Convert a hex color to an RGB color with improved robustness
 export function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : { r: 0, g: 0, b: 0 };
+  // Default to black for invalid colors
+  if (!hex || typeof hex !== 'string') {
+    return { r: 0, g: 0, b: 0 };
+  }
+  
+  // Remove # if present
+  hex = hex.replace(/^#/, '');
+  
+  // Handle both 3-digit and 6-digit hex
+  let r, g, b;
+  
+  if (hex.length === 3) {
+    // Convert 3-digit hex to 6-digit (#RGB -> #RRGGBB)
+    r = parseInt(hex[0] + hex[0], 16);
+    g = parseInt(hex[1] + hex[1], 16);
+    b = parseInt(hex[2] + hex[2], 16);
+  } else if (hex.length === 6) {
+    // Standard 6-digit hex
+    r = parseInt(hex.substring(0, 2), 16);
+    g = parseInt(hex.substring(2, 4), 16);
+    b = parseInt(hex.substring(4, 6), 16);
+  } else {
+    // Invalid hex format
+    return { r: 0, g: 0, b: 0 };
+  }
+  
+  // Validate the parsed values
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return { r: 0, g: 0, b: 0 };
+  }
+  
+  return { 
+    r: Math.max(0, Math.min(255, r)), 
+    g: Math.max(0, Math.min(255, g)), 
+    b: Math.max(0, Math.min(255, b)) 
+  };
 }
 
-// Convert RGB values to a hex color
+// Convert RGB values to a hex color with proper formatting
 export function rgbToHex(r: number, g: number, b: number): string {
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  // Ensure each value is in valid range
+  r = Math.max(0, Math.min(255, Math.floor(r)));
+  g = Math.max(0, Math.min(255, Math.floor(g)));
+  b = Math.max(0, Math.min(255, Math.floor(b)));
+  
+  // Format each component with leading zeros
+  const rHex = r.toString(16).padStart(2, '0');
+  const gHex = g.toString(16).padStart(2, '0');
+  const bHex = b.toString(16).padStart(2, '0');
+  
+  return `#${rHex}${gHex}${bHex}`;
 }
 
 // Get a gradient color between two colors based on a ratio
