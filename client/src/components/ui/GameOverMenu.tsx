@@ -153,31 +153,34 @@ const GameOverMenu = () => {
         </div>
         
         <div className="flex flex-col gap-3">
-          <Button 
-            className="w-full py-3 px-6 font-semibold flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white"
+          <button 
+            className="w-full py-3 px-6 font-semibold flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md"
             onClick={handleRestart}
+            style={{cursor: 'pointer', pointerEvents: 'auto'}}
           >
             <RotateCcw size={20} />
             Play Again
-          </Button>
+          </button>
           
           {isLevelCompleted && (
-            <Button 
-              className="w-full py-3 px-6 font-semibold flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white"
+            <button 
+              className="w-full py-3 px-6 font-semibold flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white rounded-md"
               onClick={handleNextLevel}
+              style={{cursor: 'pointer', pointerEvents: 'auto'}}
             >
               Next Level
               <ChevronRight size={20} />
-            </Button>
+            </button>
           )}
           
-          <Button 
-            className="w-full py-3 px-6 font-semibold flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white"
+          <button 
+            className="w-full py-3 px-6 font-semibold flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md"
             onClick={handleMainMenu}
+            style={{cursor: 'pointer', pointerEvents: 'auto'}}
           >
             <Home size={20} />
             Main Menu
-          </Button>
+          </button>
         </div>
       </div>
     </div>

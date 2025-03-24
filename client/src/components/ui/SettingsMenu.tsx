@@ -93,24 +93,24 @@ const SettingsMenu = () => {
       <div className="w-full max-w-2xl">
         <div className="glass-panel p-8">
           <div className="flex justify-between items-center mb-6">
-            <Button
-              variant="outline"
+            <button
               onClick={handleBackToMenu}
-              className="bg-gray-800/70 hover:bg-gray-700/70"
+              className="px-4 py-2 rounded-md flex items-center bg-gray-800/70 hover:bg-gray-700/70 text-white"
+              style={{cursor: 'pointer', pointerEvents: 'auto'}}
             >
               <ChevronLeft className="mr-2" size={20} />
               Back
-            </Button>
+            </button>
             
             <h2 className="text-2xl font-bold text-center">Settings</h2>
             
-            <Button
-              variant="outline"
+            <button
               onClick={handleReset}
-              className="bg-gray-800/70 hover:bg-gray-700/70"
+              className="px-4 py-2 rounded-md bg-gray-800/70 hover:bg-gray-700/70 text-white"
+              style={{cursor: 'pointer', pointerEvents: 'auto'}}
             >
               Reset
-            </Button>
+            </button>
           </div>
           
           <Tabs defaultValue="audio" className="w-full">
@@ -366,13 +366,13 @@ const SettingsMenu = () => {
         </div>
         
         <div className="flex justify-center mt-6">
-          <Button
-            variant="outline"
+          <button
             onClick={handleBackToMenu}
-            className="bg-blue-600 hover:bg-blue-500"
+            className="px-6 py-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold"
+            style={{cursor: 'pointer', pointerEvents: 'auto'}}
           >
             Save & Return
-          </Button>
+          </button>
         </div>
       </div>
     </div>

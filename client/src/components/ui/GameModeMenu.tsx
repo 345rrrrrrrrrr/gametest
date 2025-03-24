@@ -147,13 +147,14 @@ const GameModeMenu = () => {
             </div>
             
             {/* Destruction Mode */}
-            <Card 
-              className={`p-6 cursor-pointer transition-all hover:scale-105 ${
+            <div 
+              className={`p-6 transition-all hover:scale-105 rounded-lg ${
                 isModeSupported(GameMode.DESTRUCTION) 
                   ? 'bg-gray-800/80 hover:bg-gray-700/80' 
-                  : 'bg-gray-900/50 opacity-60 cursor-not-allowed'
+                  : 'bg-gray-900/50 opacity-60'
               }`}
               onClick={() => isModeSupported(GameMode.DESTRUCTION) && handleSelectMode(GameMode.DESTRUCTION)}
+              style={{cursor: isModeSupported(GameMode.DESTRUCTION) ? 'pointer' : 'not-allowed', pointerEvents: 'auto'}}
             >
               <div className="flex items-start gap-4">
                 <div className="bg-red-600 p-3 rounded-lg">
@@ -171,7 +172,7 @@ const GameModeMenu = () => {
                   )}
                 </div>
               </div>
-            </Card>
+            </div>
           </div>
         </div>
         
