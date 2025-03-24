@@ -25,9 +25,9 @@ const GameModeMenu = () => {
     setPhase(GamePhase.PLAYING);
   };
   
-  // Check if current level supports selected game mode
+  // All game modes are now supported for all levels
   const isModeSupported = (mode: GameMode): boolean => {
-    return currentLevel?.supportedGameModes.includes(mode) || false;
+    return true; // Always return true to make all modes available
   };
   
   return (
