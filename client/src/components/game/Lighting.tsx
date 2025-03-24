@@ -90,7 +90,7 @@ const Lighting = () => {
       <directionalLight
         ref={directionalLightRef}
         position={[10, 40, 20]}
-        intensity={1.5}
+        intensity={2.0}
         castShadow={true}
         color="#ffffff"
       />
@@ -98,35 +98,45 @@ const Lighting = () => {
       {/* Ambient light for general illumination */}
       <ambientLight 
         ref={ambientLightRef}
-        intensity={0.4} 
+        intensity={0.6} 
         color="#aabbff"
       />
       
       {/* Hemisphere light for more natural outdoor lighting */}
       <hemisphereLight 
-        intensity={0.5}
+        intensity={0.7}
         color="#bbddff"
         groundColor="#334455"
       />
       
-      {/* Optional colored point lights for accent lighting */}
+      {/* Enhanced colored point lights for dramatic accent lighting */}
       <pointLight
         ref={(el) => el && (pointLightsRef.current[0] = el)}
         position={[15, 5, -15]}
-        intensity={0.8}
+        intensity={1.2}
         color="#ff8800"
-        distance={50}
-        decay={2}
-        castShadow={false}
+        distance={80}
+        decay={1.5}
+        castShadow={true}
       />
       
       <pointLight
         ref={(el) => el && (pointLightsRef.current[1] = el)}
         position={[-15, 5, 15]}
-        intensity={0.8}
+        intensity={1.2}
         color="#0088ff"
-        distance={50}
-        decay={2}
+        distance={80}
+        decay={1.5}
+        castShadow={true}
+      />
+      
+      <pointLight
+        ref={(el) => el && (pointLightsRef.current[2] = el)}
+        position={[0, 15, 10]}
+        intensity={1.0}
+        color="#ffffff"
+        distance={60}
+        decay={1.5}
         castShadow={false}
       />
     </>

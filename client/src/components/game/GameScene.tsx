@@ -46,16 +46,24 @@ const GameScene = () => {
   const frameCount = useRef(0);
   const fps = useRef(0);
   
-  // Initialize scene
+  // Initialize scene with enhanced 3D settings
   useEffect(() => {
     // Set background
-    scene.background = new THREE.Color('#111122');
+    scene.background = new THREE.Color('#0a0a20');
     
-    // Set fog
-    scene.fog = new THREE.Fog('#111122', 50, 100);
+    // Set fog for depth perception (closer fog start for more dramatic effect)
+    scene.fog = new THREE.Fog('#0a0a20', 30, 120);
+    
+    // Adjust camera for better 3D perspective
+    if (camera instanceof THREE.PerspectiveCamera) {
+      camera.fov = 55; // Narrower FOV for more realistic perspective
+      camera.near = 0.1;
+      camera.far = 1000;
+      camera.updateProjectionMatrix();
+    }
     
     console.log('Game scene initialized');
-  }, [scene]);
+  }, [scene, camera]);
   
   // Game loop
   useFrame((state, delta) => {
@@ -85,9 +93,16 @@ const GameScene = () => {
       {showFPS && <Perf position="top-left" />}
       {showFPS && <Stats />}
       
-      {/* Sky and environment */}
-      <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0.6} azimuth={0.25} />
-      <Environment preset="sunset" />
+      {/* Enhanced sky and environment for better 3D visuals */}
+      <Sky 
+        distance={450000} 
+        sunPosition={[5, 1, 8]} 
+        inclination={0.5} 
+        azimuth={0.35} 
+        turbidity={10}
+        rayleigh={0.5}
+      />
+      <Environment preset="sunset" background={false} blur={0.8} />
       
       {/* Lighting setup */}
       <Lighting />
