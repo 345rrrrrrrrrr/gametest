@@ -35,14 +35,14 @@ const GameModeMenu = () => {
       <div className="w-full max-w-3xl">
         <div className="glass-panel p-8">
           <div className="flex justify-between items-center mb-6">
-            <Button
-              variant="outline"
+            <button
               onClick={handleBackToLevelSelect}
-              className="bg-gray-800/70 hover:bg-gray-700/70"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-800/70 hover:bg-gray-700/70 py-2 px-4"
+              style={{cursor: 'pointer'}}
             >
               <ChevronLeft className="mr-2" size={20} />
               Back
-            </Button>
+            </button>
             
             <h2 className="text-2xl font-bold text-center">Select Game Mode</h2>
             
@@ -63,13 +63,14 @@ const GameModeMenu = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Sandbox Mode */}
-            <Card 
-              className={`p-6 cursor-pointer transition-all hover:scale-105 ${
+            <div 
+              className={`p-6 transition-all hover:scale-105 rounded-lg ${
                 isModeSupported(GameMode.SANDBOX) 
                   ? 'bg-gray-800/80 hover:bg-gray-700/80' 
-                  : 'bg-gray-900/50 opacity-60 cursor-not-allowed'
+                  : 'bg-gray-900/50 opacity-60'
               }`}
               onClick={() => isModeSupported(GameMode.SANDBOX) && handleSelectMode(GameMode.SANDBOX)}
+              style={{cursor: isModeSupported(GameMode.SANDBOX) ? 'pointer' : 'not-allowed', pointerEvents: 'auto'}}
             >
               <div className="flex items-start gap-4">
                 <div className="bg-blue-600 p-3 rounded-lg">
@@ -87,16 +88,17 @@ const GameModeMenu = () => {
                   )}
                 </div>
               </div>
-            </Card>
+            </div>
             
             {/* Time Trial Mode */}
-            <Card 
-              className={`p-6 cursor-pointer transition-all hover:scale-105 ${
+            <div 
+              className={`p-6 transition-all hover:scale-105 rounded-lg ${
                 isModeSupported(GameMode.TIME_TRIAL) 
                   ? 'bg-gray-800/80 hover:bg-gray-700/80' 
-                  : 'bg-gray-900/50 opacity-60 cursor-not-allowed'
+                  : 'bg-gray-900/50 opacity-60'
               }`}
               onClick={() => isModeSupported(GameMode.TIME_TRIAL) && handleSelectMode(GameMode.TIME_TRIAL)}
+              style={{cursor: isModeSupported(GameMode.TIME_TRIAL) ? 'pointer' : 'not-allowed', pointerEvents: 'auto'}}
             >
               <div className="flex items-start gap-4">
                 <div className="bg-green-600 p-3 rounded-lg">
@@ -114,16 +116,17 @@ const GameModeMenu = () => {
                   )}
                 </div>
               </div>
-            </Card>
+            </div>
             
             {/* Puzzle Mode */}
-            <Card 
-              className={`p-6 cursor-pointer transition-all hover:scale-105 ${
+            <div 
+              className={`p-6 transition-all hover:scale-105 rounded-lg ${
                 isModeSupported(GameMode.PUZZLE) 
                   ? 'bg-gray-800/80 hover:bg-gray-700/80' 
-                  : 'bg-gray-900/50 opacity-60 cursor-not-allowed'
+                  : 'bg-gray-900/50 opacity-60'
               }`}
               onClick={() => isModeSupported(GameMode.PUZZLE) && handleSelectMode(GameMode.PUZZLE)}
+              style={{cursor: isModeSupported(GameMode.PUZZLE) ? 'pointer' : 'not-allowed', pointerEvents: 'auto'}}
             >
               <div className="flex items-start gap-4">
                 <div className="bg-purple-600 p-3 rounded-lg">
@@ -141,7 +144,7 @@ const GameModeMenu = () => {
                   )}
                 </div>
               </div>
-            </Card>
+            </div>
             
             {/* Destruction Mode */}
             <Card 
