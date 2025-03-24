@@ -51,55 +51,64 @@ const GameMenu = () => {
   };
   
   return (
-    <div className="fixed inset-0 game-background flex flex-col items-center justify-center p-4">
+    <div className="fixed inset-0 game-background flex flex-col items-center justify-center p-4 pointer-events-auto">
       <div className="w-full max-w-md">
         {/* Game title with animated glow */}
         <h1 className="game-title">PHYSICS SANDBOX</h1>
         
         <div className="glass-panel neon-border p-8">
           <div className="flex flex-col gap-4">
-            <Button onClick={handleStartGame} className="menu-button">
+            <button 
+              onClick={handleStartGame} 
+              className="menu-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors"
+              style={{cursor: 'pointer'}}
+            >
               <Play className="mr-2" size={20} />
               Play
-            </Button>
+            </button>
             
-            <Button onClick={handleLevelSelect} className="menu-button">
+            <button 
+              onClick={handleLevelSelect} 
+              className="menu-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors"
+              style={{cursor: 'pointer'}}
+            >
               <Trophy className="mr-2" size={20} />
               Levels
-            </Button>
+            </button>
             
-            <Button onClick={handleSettings} className="menu-button">
+            <button 
+              onClick={handleSettings} 
+              className="menu-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors"
+              style={{cursor: 'pointer'}}
+            >
               <Settings className="mr-2" size={20} />
               Settings
-            </Button>
+            </button>
             
             <div className="flex justify-between mt-6">
-              <Button
-                variant="outline"
-                size="icon"
+              <button
+                style={{cursor: 'pointer'}}
                 onClick={() => setShowHelp(true)}
-                className="bg-gray-800/70 hover:bg-gray-700/70"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-800/70 hover:bg-gray-700/70 h-9 w-9"
               >
                 <HelpCircle size={20} />
-              </Button>
+              </button>
               
-              <Button
-                variant="outline"
-                size="icon"
+              <button
+                style={{cursor: 'pointer'}}
                 onClick={() => setShowCredits(true)}
-                className="bg-gray-800/70 hover:bg-gray-700/70"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-800/70 hover:bg-gray-700/70 h-9 w-9"
               >
                 <Github size={20} />
-              </Button>
+              </button>
               
-              <Button
-                variant="outline"
-                size="icon"
+              <button
+                style={{cursor: 'pointer'}}
                 onClick={toggleMute}
-                className="bg-gray-800/70 hover:bg-gray-700/70"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-800/70 hover:bg-gray-700/70 h-9 w-9"
               >
                 {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-              </Button>
+              </button>
             </div>
           </div>
         </div>
@@ -135,9 +144,13 @@ const GameMenu = () => {
                 </ul>
               </div>
             </div>
-            <Button className="mt-6 w-full" onClick={() => setShowHelp(false)}>
+            <button 
+              className="mt-6 w-full inline-flex items-center justify-center whitespace-nowrap rounded-md bg-blue-600 hover:bg-blue-500 text-white py-2"
+              style={{cursor: 'pointer'}}
+              onClick={() => setShowHelp(false)}
+            >
               Close
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -158,9 +171,13 @@ const GameMenu = () => {
                 Special thanks to the Three.js, React Three Fiber, and Zustand communities.
               </p>
             </div>
-            <Button className="mt-6 w-full" onClick={() => setShowCredits(false)}>
+            <button 
+              className="mt-6 w-full inline-flex items-center justify-center whitespace-nowrap rounded-md bg-blue-600 hover:bg-blue-500 text-white py-2"
+              style={{cursor: 'pointer'}}
+              onClick={() => setShowCredits(false)}
+            >
               Close
-            </Button>
+            </button>
           </div>
         </div>
       )}

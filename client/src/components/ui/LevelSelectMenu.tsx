@@ -56,37 +56,37 @@ const LevelSelectMenu = () => {
       <div className="w-full max-w-4xl">
         <div className="glass-panel p-8">
           <div className="flex justify-between items-center mb-6">
-            <Button
-              variant="outline"
+            <button
               onClick={handleBackToMenu}
-              className="bg-gray-800/70 hover:bg-gray-700/70"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-800/70 hover:bg-gray-700/70 py-2 px-4"
+              style={{cursor: 'pointer'}}
             >
               <ChevronLeft className="mr-2" size={20} />
               Back
-            </Button>
+            </button>
             
             <h2 className="text-2xl font-bold text-center">
               World {currentWorld + 1}: {worldNames[currentWorld] || "Unknown"}
             </h2>
             
             <div className="flex gap-2">
-              <Button
-                variant="outline"
+              <button
                 onClick={handlePrevWorld}
                 disabled={currentWorld === 0}
-                className="bg-gray-800/70 hover:bg-gray-700/70 disabled:opacity-50"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-800/70 hover:bg-gray-700/70 disabled:opacity-50 h-9 w-9"
+                style={{cursor: currentWorld === 0 ? 'default' : 'pointer'}}
               >
                 &lt;
-              </Button>
+              </button>
               
-              <Button
-                variant="outline"
+              <button
                 onClick={handleNextWorld}
                 disabled={currentWorld === worldCount - 1}
-                className="bg-gray-800/70 hover:bg-gray-700/70 disabled:opacity-50"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-800/70 hover:bg-gray-700/70 disabled:opacity-50 h-9 w-9"
+                style={{cursor: currentWorld === worldCount - 1 ? 'default' : 'pointer'}}
               >
                 &gt;
-              </Button>
+              </button>
             </div>
           </div>
           
