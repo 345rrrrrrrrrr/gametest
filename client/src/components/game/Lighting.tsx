@@ -1,132 +1,134 @@
+import * as THREE from 'three';
 import { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-import { useSettings } from '../../lib/stores/useSettings';
+import { useSettingsState } from '@/lib/stores/useSettingsState';
+import { useLevelState } from '@/lib/stores/useLevelState';
 
 const Lighting = () => {
-  const settings = useSettings();
-  const mainLightRef = useRef<THREE.DirectionalLight>(null);
-  const secondaryLightRef = useRef<THREE.DirectionalLight>(null);
+  const shadowQuality = useSettingsState(state => state.settings.shadowQuality);
+  const currentLevel = useLevelState(state => state.currentLevel);
+  
+  // References to lights
+  const directionalLightRef = useRef<THREE.DirectionalLight>(null);
   const ambientLightRef = useRef<THREE.AmbientLight>(null);
+  const pointLightsRef = useRef<THREE.PointLight[]>([]);
   
-  // Time tracking for animation
-  const time = useRef(0);
-  
-  // Set up lights based on settings
+  // Configure lighting based on level settings and quality
   useEffect(() => {
-    if (mainLightRef.current) {
-      mainLightRef.current.intensity = settings.lightingQuality === 'high' ? 1.2 : 0.8;
-      mainLightRef.current.castShadow = settings.shadows;
+    if (!directionalLightRef.current || !ambientLightRef.current) return;
+    
+    // Configure directional light shadow properties based on quality setting
+    const dirLight = directionalLightRef.current;
+    
+    if (shadowQuality === 'high') {
+      dirLight.shadow.mapSize.width = 2048;
+      dirLight.shadow.mapSize.height = 2048;
+      dirLight.shadow.camera.near = 0.5;
+      dirLight.shadow.camera.far = 500;
+      dirLight.shadow.bias = -0.001;
+    } else if (shadowQuality === 'medium') {
+      dirLight.shadow.mapSize.width = 1024;
+      dirLight.shadow.mapSize.height = 1024;
+      dirLight.shadow.camera.near = 0.5;
+      dirLight.shadow.camera.far = 350;
+      dirLight.shadow.bias = -0.001;
+    } else {
+      dirLight.shadow.mapSize.width = 512;
+      dirLight.shadow.mapSize.height = 512;
+      dirLight.shadow.camera.near = 1;
+      dirLight.shadow.camera.far = 200;
+      dirLight.shadow.bias = -0.002;
+    }
+    
+    // Set up shadow camera frustum
+    const shadowSize = 30;
+    dirLight.shadow.camera.left = -shadowSize;
+    dirLight.shadow.camera.right = shadowSize;
+    dirLight.shadow.camera.top = shadowSize;
+    dirLight.shadow.camera.bottom = -shadowSize;
+    
+    // Update shadow camera
+    dirLight.shadow.camera.updateProjectionMatrix();
+    
+    // Configure light intensities based on level settings
+    if (currentLevel?.settings) {
+      dirLight.intensity = currentLevel.settings.directionalLightIntensity;
+      ambientLightRef.current.intensity = currentLevel.settings.ambientLightIntensity;
       
-      // Configure shadow properties if enabled
-      if (settings.shadows) {
-        const shadowMapSize = settings.lightingQuality === 'high' ? 2048 : 1024;
-        mainLightRef.current.shadow.mapSize.width = shadowMapSize;
-        mainLightRef.current.shadow.mapSize.height = shadowMapSize;
-        mainLightRef.current.shadow.camera.near = 0.5;
-        mainLightRef.current.shadow.camera.far = 50;
-        mainLightRef.current.shadow.camera.left = -20;
-        mainLightRef.current.shadow.camera.right = 20;
-        mainLightRef.current.shadow.camera.top = 20;
-        mainLightRef.current.shadow.camera.bottom = -20;
-        mainLightRef.current.shadow.bias = -0.0005;
-      }
+      // Set shadow enabled state
+      dirLight.castShadow = currentLevel.settings.shadowsEnabled;
     }
-    
-    if (secondaryLightRef.current) {
-      secondaryLightRef.current.intensity = settings.lightingQuality === 'high' ? 0.7 : 0.4;
-      secondaryLightRef.current.castShadow = settings.shadows && settings.lightingQuality === 'high';
-    }
-    
-    if (ambientLightRef.current) {
-      ambientLightRef.current.intensity = settings.lightingQuality === 'high' ? 0.5 : 0.7;
-    }
-  }, [settings.lightingQuality, settings.shadows]);
+  }, [shadowQuality, currentLevel]);
   
-  // Animate lights if settings allow
-  useFrame((_, delta) => {
-    if (settings.dynamicLighting && mainLightRef.current) {
-      time.current += delta;
+  // Animate subtle light movement for more dynamic feel
+  useFrame((state, delta) => {
+    if (directionalLightRef.current) {
+      const time = state.clock.elapsedTime;
       
-      // Subtle movement of main light to create dynamic shadows
-      const xPos = Math.sin(time.current * 0.1) * 5;
-      const zPos = Math.cos(time.current * 0.1) * 5;
+      // Subtle sun movement
+      directionalLightRef.current.position.x = Math.sin(time * 0.1) * 50;
+      directionalLightRef.current.position.z = Math.cos(time * 0.1) * 50;
       
-      mainLightRef.current.position.x = xPos;
-      mainLightRef.current.position.z = zPos;
-      
-      // Update the light target to maintain direction
-      mainLightRef.current.target.position.set(0, 0, 0);
-      mainLightRef.current.target.updateMatrixWorld();
+      // Update directional light target position
+      const target = directionalLightRef.current.target as THREE.Object3D;
+      target.updateMatrixWorld();
     }
+    
+    // Animate point lights if any
+    pointLightsRef.current.forEach((light, index) => {
+      const time = state.clock.elapsedTime;
+      const offset = index * Math.PI / 4;
+      
+      // Subtle pulsing of intensity
+      light.intensity = 0.7 + Math.sin(time * 2 + offset) * 0.3;
+    });
   });
   
   return (
     <>
-      {/* Main directional light */}
+      {/* Main directional light (sun) */}
       <directionalLight
-        ref={mainLightRef}
-        position={[5, 10, 5]}
+        ref={directionalLightRef}
+        position={[10, 40, 20]}
+        intensity={1.5}
+        castShadow={true}
         color="#ffffff"
-        intensity={1.2}
-        castShadow
-      >
-        {settings.debug && (
-          <directionalLightHelper args={[undefined, 5]} />
-        )}
-      </directionalLight>
-      
-      {/* Secondary fill light */}
-      <directionalLight
-        ref={secondaryLightRef}
-        position={[-10, 8, -10]}
-        color="#b3ccff"
-        intensity={0.7}
-        castShadow={settings.lightingQuality === 'high'}
       />
       
-      {/* Ambient light for base illumination */}
-      <ambientLight
+      {/* Ambient light for general illumination */}
+      <ambientLight 
         ref={ambientLightRef}
+        intensity={0.4} 
         color="#aabbff"
-        intensity={0.5}
       />
       
-      {/* Add hemisphere light for more realistic outdoor lighting */}
-      {settings.lightingQuality === 'high' && (
-        <hemisphereLight
-          color="#bde8ff"
-          groundColor="#523e50"
-          intensity={0.8}
-        />
-      )}
+      {/* Hemisphere light for more natural outdoor lighting */}
+      <hemisphereLight 
+        intensity={0.5}
+        color="#bbddff"
+        groundColor="#334455"
+      />
       
-      {/* Add environment-specific lights */}
-      {settings.environment === 'night' && (
-        <>
-          <pointLight
-            position={[10, 15, 0]}
-            color="#4e88ff"
-            intensity={2}
-            distance={50}
-          />
-          <pointLight
-            position={[-15, 5, -15]}
-            color="#a64dff"
-            intensity={1.5}
-            distance={35}
-          />
-        </>
-      )}
+      {/* Optional colored point lights for accent lighting */}
+      <pointLight
+        ref={(el) => el && (pointLightsRef.current[0] = el)}
+        position={[15, 5, -15]}
+        intensity={0.8}
+        color="#ff8800"
+        distance={50}
+        decay={2}
+        castShadow={false}
+      />
       
-      {settings.environment === 'sunset' && (
-        <pointLight
-          position={[-20, 10, 5]}
-          color="#ff7e4d"
-          intensity={2.5}
-          distance={60}
-        />
-      )}
+      <pointLight
+        ref={(el) => el && (pointLightsRef.current[1] = el)}
+        position={[-15, 5, 15]}
+        intensity={0.8}
+        color="#0088ff"
+        distance={50}
+        decay={2}
+        castShadow={false}
+      />
     </>
   );
 };
